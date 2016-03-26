@@ -1,0 +1,37 @@
+
+type conclusion = Update of graph(new_graph) * int(new_flux) | Unchanged | Invalid
+
+
+let rec wizard_analysis graph cur_flux end_flux ... =
+
+	if cur_flux < end_flux then (
+		match Wizard.iter_nodes graph ... with
+		| Update (new_graph, new_flux) ->
+			wizard_analysis new_graph new_flux end_flux ... (* Tail recursion *)
+		| Invalid ->
+			Fail (* Return value *)
+		| Unchanged ->
+			forall_assumptions graph cur_flux end_flux ... (* Iteration before recursion *)
+
+	) else (
+		Success graph (* Return value *)
+
+	)
+
+(* Try all assumptions one by one with f(), until one returns a Success  *)
+and forall_assumptions graph cur_flux end_flux ... = 
+
+	let rec aux ... =
+		match ... with
+		| NoMoreAssumption -> Fail (* Return value *)
+		| _ ->
+			let new_graph, new_flux = some_way_of_making_an_assumption ... in
+
+			match wizard_analysis graph cur_flux end_flux with (* Recursion *)
+			| Fail -> aux ... (* Iteration *)
+			| success -> success (* Return value (transmission) *)
+
+	in
+	aux ...
+
+in
