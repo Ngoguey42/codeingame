@@ -39,11 +39,17 @@ module Graph = (struct
 				 type t = {
 					 verts : Vert.t array;
 					 edges : Edge.t array;
+					 num_verts : int
+					 num_edges : int
+					 num_bridges : int (* (Sum (Vert.capacity)) / 2*)
 				   }
 				 type varying = {
-					 verts : Vert.varying array;
+					 verts : Vert.varying array; (* TODO: rename or move *)
 					 edges : Edge.varying array;
-				   }
+					 num_roots : int (* (Sum (Vert.group | Root -> 1 | _ -> 0))
+															start at num_verts *)
+					 bridges_left : int (* num_bridges - (Sum (Vert.defict)) / 2
+					 											Start at 0 *)
 
 			   end)
 
