@@ -1,0 +1,115 @@
+Foreach vertices read
+Create a vertex list reversed
+Create count vertices
+Create capacity sum
+Create (vertex x hashtbl)
+Create (vertex y hashtbl)
+
+From (vertex list reversed) and (count vertices)
+Create Vert.t array
+
+Foreach vertices iterated by x coords
+Foreach vertices on the same column
+Create edges between them, attribute a global edge index (x + y)
+Create (edge hashtbl) for this column
+Create count vertical edges
+
+Foreach vertices iterated by y coords
+Foreach vertices on the same line
+Create edges between them, attribute a global edge index (x + y)
+Create (edge hashtbl) for this line
+Create count horizontal edges
+
+From (vertical edge list) + (horizontql edge list) + (count edges)
+Create Edge.t array
+
+	Foreach vertical edges in array
+	Iterate each  ]vertA.x; x; vertB.x[
+	Create perpendicular edge list
+
+	Foreach horizontal edges in array
+	Iterate each  ]vertA.x; x; vertB.x[
+	Create perpendicular edge list
+
+	
+Graph.make:
+	
+	Edge.t array constructor:
+		StdoutRead:
+			-> stdin
+			<- Vert.t list (reversed)
+			<- Vertices count
+			<- Capacity sum
+			<- vertId Hashtbl per line, y indexed
+			<- vertId Hashtbl per column, x indexed
+
+		<- Edge.t array
+		<- Vertices count
+		<- Capacity sum
+		<- vertId Hashtbl per line, y indexed
+		<- vertId Hashtbl per column, x indexed
+
+	<- t.verts
+	<- t.num_verts
+	<- t.num_bridges
+	<- varying.num_roots
+	<- varying.bridges_left
+
+	Edge.t array constructor:
+		-> Vert.t array
+		-> vertId Hashtbl per line, y indexed
+		-> vertId Hashtbl per column, x indexed
+
+		OrientationsAnalysis: (per line)
+			-> Vert.t array
+			-> vertId Hashtbl per line, y indexed
+			<- (vertId, vertId) list (reversed, horizontal)
+			<- (y, edgeId) Hashtb.t
+			<- count horizontal edges
+
+		OrientationsAnalysis: (per column)
+			-> Vert.t array
+			-> vertId Hashtbl per column, x indexed
+			<- (vertId, vertId) list (reversed, vertical)
+			<- (x, edgeId) Hashtb.t
+			<- count vertical edges
+		
+		Edge.t constructor (pass1):
+			-> Edge array
+			-> edgeId
+			-> Vert array
+			-> vertAId, vertBId
+			<- .verts_id
+			<- .capacity
+			<- .orientation
+
+		vEdge.t constructor (pass2):
+			-> Edge array
+			-> edgeId
+			-> horizontal Edges hashtbl per line
+			-> vertical Edges hashtbl per column
+			<- .perp_edges_id 
+			
+		<- Edge.t array
+			
+	<- t.edges
+	<- t.num_edges
+		
+	
+	Edges.varying array constructor:
+		-> Edge array
+		-> Vert array
+		<- Edges.varying array
+	
+	<- varying.edges
+	
+	Verts.varying array constructor:
+		-> Edge array
+		-> Vert array
+		<- Verts.varying array 
+	
+	<- varying.verts
+	
+	
+	
+	
