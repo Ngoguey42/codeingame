@@ -1,9 +1,11 @@
 
 module Edge = (struct
+				type orientation = Vertical of int | Horizontal of int
 				type t = {
 					verts_id : int * int; (* vertex a and vertex b *)
 					perp_edges_id : int list; (* egdes crossed *)
 					capacity : int; (* max 2 a.capacity b.capacity -> {1; 2} *)
+					orientation : orientation;
 				  }
 				type varying = {
 					prune : bool; (* saturation of a vertex
