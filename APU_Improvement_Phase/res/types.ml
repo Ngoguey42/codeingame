@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/03 12:22:46 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/03 12:29:42 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/03 15:03:00 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -24,6 +24,18 @@ module Edge = (
 									or blocked by other edge *)
 		flux : int; (* capacity left -> {0; 1; 2} *)
 	  }
+	let to_string { verts_id = (a, b)
+				  ; perp_edges_id
+				  ; capacity
+				  ; orientation} =
+	  let perpStr = String.concat ";" @@ List.map string_of_int perp_edges_id
+	  in
+	  let oriStr = match orientation with
+		| Vertical x -> Printf.sprintf "(Vert x=%d)" x
+		| Horizontal y -> Printf.sprintf "(Hori y=%d)" y
+	  in
+	  Printf.sprintf "(vIds(%d, %d), perpVIds(%s), cap(%d), ori(%s))"
+					 a b perpStr capacity oriStr
 
   end)
 
@@ -47,9 +59,17 @@ module Vert = (
 		deficit : int; (* capacity left -> {0-capacity} *)
 		group : Connection.t;
 	  }
+	let to_string {coords = (x, y); capacity} =
+	  Printf.sprintf "(x%d, y%d, c%d)" x y capacity
+
+	let id_to_string arr i =
+	  let {coords = (x, y); capacity} = arr.(i) in
+	  Printf.sprintf "#%d(x%d, y%d, c%d)" i x y capacity
+
+	let id_list_to_string arr l =
+	  Printf.sprintf "[%s]" (String.concat "; " @@ List.map (id_to_string arr) l)
 
   end)
-
 
 module Graph = (
   struct
