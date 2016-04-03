@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/03 12:22:46 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/03 15:03:00 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/03 16:05:14 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -64,10 +64,33 @@ module Vert = (
 
 	let id_to_string arr i =
 	  let {coords = (x, y); capacity} = arr.(i) in
-	  Printf.sprintf "#%d(x%d, y%d, c%d)" i x y capacity
+	  Printf.sprintf "#%02d(x%d, y%d, c%d)" i x y capacity
 
 	let id_list_to_string arr l =
 	  Printf.sprintf "[%s]" (String.concat "; " @@ List.map (id_to_string arr) l)
+
+  end)
+
+module ToString = (
+  struct
+
+	let edge_id vArr eArr eId =
+	  let { Edge.verts_id = (aId, bId)
+		  ; Edge.perp_edges_id
+		  ; Edge.capacity
+		  ; Edge.orientation} = eArr.(eId) in
+	  let perpStr = String.concat ";" @@ List.map string_of_int perp_edges_id
+	  in
+	  let oriStr = match orientation with
+		| Edge.Vertical x -> Printf.sprintf "(Vert x=%d)" x
+		| Edge.Horizontal y -> Printf.sprintf "(Hori y=%d)" y
+	  in
+	  Printf.sprintf "#%02d(v(%s, %s), perpVIds(%s), cap(%d), ori(%s))"
+					 eId
+					 (Vert.id_to_string vArr aId)
+					 (Vert.id_to_string vArr bId)
+					 perpStr capacity oriStr
+
 
   end)
 

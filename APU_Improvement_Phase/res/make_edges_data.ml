@@ -6,14 +6,14 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/03 13:28:44 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/03 15:12:15 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/03 16:34:19 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
 module Make_edges_data : (
   sig
 	val make : Vert.t array -> (int, int) Hashtbl.t -> (int, int) Hashtbl.t
-			   -> unit
+			   -> Edge.t array
   end) = (
   struct
 
@@ -24,11 +24,9 @@ module Make_edges_data : (
 		eCount : int;
 	  }
 	type vertIdAcc = {
-
 		prevVertId : int option;
 		eLst' : Edge.t list;
 		eCount' : int;
-
 	  }
 
 	let debugArr = ref [||] (* TODO: Remove *)
@@ -61,8 +59,8 @@ module Make_edges_data : (
 						; Edge.perp_edges_id = []
 						; Edge.capacity = 0
 						; Edge.orientation = getOrientation dimVal } in
-				Printf.eprintf "New edge: %s \n%!"
-				@@ Edge.to_string e;
+				(* Printf.eprintf "New edge: %s \n%!" *)
+				(* @@ Edge.to_string e; *)
 
 				Hashtbl.add dimEdgeTbl dimVal eCount';
 				{ prevVertId = Some vId
@@ -111,9 +109,51 @@ module Make_edges_data : (
 	  (eLst, eCount, dimEdgeTbl)
 
 
+	(* let arrayCtorPass1 vArr eLst eArr = *)
+
+	let genPerpIds vArr eArr xVertTbl yVertTbl =
+
+	  let aux eId {Edge.orientation; Edge.verts_id = (aId, bId)} =
+
+		match orientation with
+		| Edge.Vertical edgeX ->
+		   let {Vert.coords = (_, aY)} = vArr.(aId) in
+		   let {Vert.coords = (_, bY)} = vArr.(bId) in
+		   let edgeTopY, edgeBotY = if aY < bY then aY, bY else bY, aY in
+
+		   for edge'Y = edgeTopY + 1 to edgeBotY - 1 do
+			 Hashtbl.find_all yVertTbl edge'Y
+			 |> List.iter (fun eId' ->
+		   			let {Edge.verts_id = (cId, dId)} = eArr.(eId') in
+		   			let {Vert.coords = (cX, _)} = vArr.(cId) in
+		   			let {Vert.coords = (dX, _)} = vArr.(dId) in
+					let leftX, rightX = if cX < dX then cX, dX else dX, cX in
+
+					if edge'Y = 1 && edgeX = 3 then (
+					  Printf.eprintf "salut verEdge#%d horizEdge#%d \n%!"
+									 eId eId';
+
+					);
+
+					if leftX < edgeX && rightX > edgeX
+					   && edgeTopY < edge'Y && edgeBotY > edge'Y
+					then begin
+					  let {Edge.perp_edges_id} as edge = eArr.(eId) in
+					  eArr.(eId) <- {edge with
+									  Edge.perp_edges_id = eId'::perp_edges_id};
+					  let {Edge.perp_edges_id} as edge = eArr.(eId') in
+					  eArr.(eId') <- {edge with
+									  Edge.perp_edges_id = eId::perp_edges_id}
+					  end
+		   		  )
+		   done
+		| _ -> ()
+
+	  in
+	  Array.iteri aux eArr
+
 	let make vertArr xVertTbl yVertTbl =
 
-	  (* dimVertTbl getOtherDim orientation initELst initECount *)
 	  debugArr := vertArr;
 	  let (eLst_tmp, eCount_tmp, xEdgeTbl) =
 		orientationAnalysis
@@ -127,8 +167,26 @@ module Make_edges_data : (
 		  (fun vId -> let {Vert.coords = (x, _)} = vertArr.(vId) in x)
 		  (fun y -> Edge.Horizontal y) eLst_tmp eCount_tmp
 	  in
-
-	  ()
+	  let eArr = Array.make eCount { Edge.verts_id = (0, 0)
+								   ; Edge.perp_edges_id = []
+								   ; Edge.capacity = 0
+								   ; Edge.orientation = Edge.Vertical 0 }
+	  in
+	  let eCapa {Edge.verts_id = (aId, bId)} =
+		let {Vert.capacity = aCap}, {Vert.capacity = bCap} =
+		  vertArr.(aId), vertArr.(bId)
+		in
+		match aCap, bCap with
+		| 1, _ | _, 1 -> 1
+		| _, _ -> 2
+	  in
+	  let _ =
+		List.fold_left
+		  (fun i e -> eArr.(i) <- {e with Edge.capacity = eCapa e }; i - 1)
+		  (eCount - 1) eLst
+	  in
+	  genPerpIds vertArr eArr xEdgeTbl yEdgeTbl;
+	  eArr
 
 
   end)
