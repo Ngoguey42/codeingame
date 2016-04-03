@@ -10,7 +10,7 @@
 rm -rf tot.ml
 cat ft_string.ml >> tot.ml
 cat types.ml >> tot.ml
-cat make_edge_array.ml >> tot.ml
+cat Make_edge_data.ml >> tot.ml
 cat graph_make.ml >> tot.ml
 
 echo ";; (* End of modules declaration *)" >> tot.ml
