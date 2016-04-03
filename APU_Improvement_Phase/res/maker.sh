@@ -8,10 +8,13 @@
 # sh maker.sh > tmp.ml && ocamlc tmp.ml && ./a.out
 
 rm -rf tot.ml
-cat ft_string.ml >> tot.ml
+cat ft.ml >> tot.ml
 cat types.ml >> tot.ml
-cat Make_edge_data.ml >> tot.ml
-cat graph_make.ml >> tot.ml
+
+cat make_vertices_data.ml >> tot.ml
+cat make_edges_data.ml >> tot.ml
+
+cat make_graph.ml >> tot.ml
 
 echo ";; (* End of modules declaration *)" >> tot.ml
 

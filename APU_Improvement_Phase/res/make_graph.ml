@@ -1,27 +1,27 @@
 (* ************************************************************************** *)
 (*                                                                            *)
 (*                                                        :::      ::::::::   *)
-(*   ft_string.ml                                       :+:      :+:    :+:   *)
+(*   make_graph.ml                                      :+:      :+:    :+:   *)
 (*                                                    +:+ +:+         +:+     *)
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
-(*   Created: 2016/04/03 12:36:11 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/03 12:36:23 by ngoguey          ###   ########.fr       *)
+(*   Created: 2016/04/03 13:25:20 by ngoguey           #+#    #+#             *)
+(*   Updated: 2016/04/03 13:28:19 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
-module FtString = (
+module Make_graph = (
   struct
 
-	let foldi : (int -> 'a -> char -> 'a) -> 'a -> string -> 'a = fun f acc str ->
 
-	  let strlen = String.length str in
 
-	  let rec aux i acc =
-		if i >= strlen
-		then acc
-		else aux (i + 1) (f i acc (String.get str i))
-	  in
-	  aux 0 acc
+	let make () =
+	  let (vertArr, vCount, capSum, xVertTbl, yVertTbl) =
+		Make_vertices_data.make () in
+
+	  Printf.eprintf "#%d vertices\n%!" vCount;
+	  ()
+
+
 
   end)

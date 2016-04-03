@@ -1,16 +1,16 @@
 (* ************************************************************************** *)
 (*                                                                            *)
 (*                                                        :::      ::::::::   *)
-(*   make_edge_data.ml                                  :+:      :+:    :+:   *)
+(*   make_vertices_data.ml                              :+:      :+:    :+:   *)
 (*                                                    +:+ +:+         +:+     *)
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
-(*   Created: 2016/04/03 13:00:26 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/03 13:21:12 by ngoguey          ###   ########.fr       *)
+(*   Created: 2016/04/03 13:28:06 by ngoguey           #+#    #+#             *)
+(*   Updated: 2016/04/03 13:28:10 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
-module Make_edge_data : (
+module Make_vertices_data : (
   sig
 	val make : unit -> (Vert.t array * int * int
 						* (int, int) Hashtbl.t * (int, int) Hashtbl.t)
