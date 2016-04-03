@@ -6,14 +6,14 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/03 13:28:44 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/03 16:34:19 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/03 16:57:36 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
 module Make_edges_data : (
   sig
 	val make : Vert.t array -> (int, int) Hashtbl.t -> (int, int) Hashtbl.t
-			   -> Edge.t array
+			   -> (Edge.t array * int)
   end) = (
   struct
 
@@ -109,8 +109,13 @@ module Make_edges_data : (
 	  (eLst, eCount, dimEdgeTbl)
 
 
-	(* let arrayCtorPass1 vArr eLst eArr = *)
-
+	(*
+	 * 		- xVertTbl unused, it was unforeseen
+	 * 		- the combo Hashtbl/forloop could be improved a lot with a combo
+	 * 	Set/Range-iteration. Sadly range-iteration doen't exist in standard lib,
+	 *	nor in core.set, nor in batteries.set  (nor in c++ std::set). It would
+	 *	be easy to implement though.
+	 *)
 	let genPerpIds vArr eArr xVertTbl yVertTbl =
 
 	  let aux eId {Edge.orientation; Edge.verts_id = (aId, bId)} =
@@ -151,7 +156,6 @@ module Make_edges_data : (
 
 	  in
 	  Array.iteri aux eArr
-
 	let make vertArr xVertTbl yVertTbl =
 
 	  debugArr := vertArr;
@@ -186,7 +190,7 @@ module Make_edges_data : (
 		  (eCount - 1) eLst
 	  in
 	  genPerpIds vertArr eArr xEdgeTbl yEdgeTbl;
-	  eArr
+	  (eArr, eCount)
 
 
   end)

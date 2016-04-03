@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/03 12:22:46 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/03 16:05:14 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/03 16:58:05 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -55,7 +55,7 @@ module Vert = (
 	  }
 	type varying = {
 		unlocked_edges : int list; (* adjacent edges with
-												prune == false && flux > 0 *)
+									prune == false && flux > 0 *)
 		deficit : int; (* capacity left -> {0-capacity} *)
 		group : Connection.t;
 	  }
@@ -107,8 +107,8 @@ module Graph = (
 		verts : Vert.varying array; (* TODO: rename or move *)
 		edges : Edge.varying array;
 		num_roots : int; (* (Sum (Vert.group | Root -> 1 | _ -> 0))
-										start at num_verts *)
+							start at num_verts *)
 		bridges_left : int; (* num_bridges - (Sum (Vert.defict))
-											/ 2 Start at 0 *)
+								/ 2 Start at 0 *)
 	  }
   end)
