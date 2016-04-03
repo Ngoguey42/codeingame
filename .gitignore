@@ -1,0 +1,14 @@
+obj
+lemipc-gui
+lemipc
+a.out
+*.a
+*.o
+*.cmo
+*.cmi
+*.exe
+*.cmx
+\#*\#
+\.\#*
+*\~
+\.DS_Store
