@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/03 13:25:20 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/04 07:08:25 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/04 08:51:14 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -23,7 +23,15 @@ module Make_graph = (
       in
       Printf.eprintf "#%d edges\n%!" eCount;
       for i = 0 to Array.length edgeArr - 1 do
-        Printf.eprintf "%s\n%!" @@ ToString.edge_id vertArr edgeArr i
+        Printf.eprintf "%s\n%!" @@ ToString.E.t_id vertArr edgeArr i
+      done;
+
+      let eVarArr = Make_varying_parts.make_edges edgeArr in
+      let vVarArr = Make_varying_parts.make_vertices vertArr edgeArr in
+
+
+      for i = 0 to Array.length vVarArr - 1 do
+        Printf.eprintf "%s\n%!" @@ ToString.V.var_id vVarArr i
       done;
 
       ignore(edgeArr);

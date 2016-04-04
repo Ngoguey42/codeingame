@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/03 13:28:44 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/04 07:10:35 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/04 07:11:52 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -118,7 +118,7 @@ module Make_edges_data : (
      *  nor in Core.Set, nor in Batteries.Set  (nor in c++ std::set). It would
      *  be easy to implement though. Might be doable with Core.Tree
      *)
-    let genPerpIds vArr eArr xVertTbl yVertTbl =
+    let genPerpIds vArr eArr xEdgeTbl yEdgeTbl =
 
       let aux eId {Edge.orientation; Edge.verts_id = (aId, bId)} =
 
@@ -129,7 +129,7 @@ module Make_edges_data : (
            let edgeTopY, edgeBotY = if aY < bY then aY, bY else bY, aY in
 
            for edge'Y = edgeTopY + 1 to edgeBotY - 1 do
-             Hashtbl.find_all yVertTbl edge'Y
+             Hashtbl.find_all yEdgeTbl edge'Y
              |> List.iter (fun eId' ->
                     let {Edge.verts_id = (cId, dId)} = eArr.(eId') in
                     let {Vert.coords = (cX, _)} = vArr.(cId) in

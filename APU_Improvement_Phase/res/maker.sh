@@ -7,12 +7,15 @@
 
 # sh maker.sh > tmp.ml && ocamlc tmp.ml && ./a.out
 
-rm -rf tot.ml
+printf "" > tot.ml
+
 cat ft.ml >> tot.ml
 cat types.ml >> tot.ml
+cat tostring.ml >> tot.ml
 
 cat make_vertices_data.ml >> tot.ml
 cat make_edges_data.ml >> tot.ml
+cat make_varying_parts.ml >> tot.ml
 
 cat make_graph.ml >> tot.ml
 
