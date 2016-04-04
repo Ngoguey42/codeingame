@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/03 13:28:44 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/04 06:58:53 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/04 07:10:35 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -109,12 +109,14 @@ module Make_edges_data : (
       (eLst, eCount, dimEdgeTbl)
 
 
-    (*
-     *    - xVertTbl unused, it was unforeseen
-     *    - the combo Hashtbl/forloop could be improved a lot with a combo
+    (* IMPROVEMENTS:
+     *    - {x,y}VertTbl elements could have been (int Set.t) instead of
+     *  (int) to avoid a lot of complicated operations.
+     *    - xEdgeTbl unused, it was unforeseen
+     *    - The combo Hashtbl/forloop could be improved a lot with a combo
      *  Set/Range-iteration. Sadly range-iteration doen't exist in standard lib,
-     *  nor in core.set, nor in batteries.set  (nor in c++ std::set). It would
-     *  be easy to implement though.
+     *  nor in Core.Set, nor in Batteries.Set  (nor in c++ std::set). It would
+     *  be easy to implement though. Might be doable with Core.Tree
      *)
     let genPerpIds vArr eArr xVertTbl yVertTbl =
 

@@ -6,13 +6,12 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/03 13:25:20 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/04 06:57:08 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/04 07:08:25 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
 module Make_graph = (
   struct
-
 
     let make () =
       let (vertArr, vCount, capSum, xVertTbl, yVertTbl) =
@@ -29,7 +28,5 @@ module Make_graph = (
 
       ignore(edgeArr);
       ()
-
-
 
   end)
