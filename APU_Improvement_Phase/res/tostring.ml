@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/04 07:34:24 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/04 08:52:16 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/04 09:26:33 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -29,7 +29,7 @@ module type S_ToString =
     module E : S_ToString_E
   end
 
-module ToString : S_ToString = (
+module ToString : S_ToString =
   struct
     module Make_E (V : S_ToString_V) : S_ToString_E =
       struct
@@ -98,4 +98,4 @@ module ToString : S_ToString = (
     module rec E : S_ToString_E = Make_E(V)
        and V : S_ToString_V = Make_V(E)
 
-  end)
+  end

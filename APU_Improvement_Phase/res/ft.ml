@@ -6,11 +6,11 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/03 13:51:25 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/04 06:57:49 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/04 09:26:24 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
-module FtString = (
+module FtString =
   struct
 
     let foldi : (int -> 'a -> char -> 'a) -> 'a -> string -> 'a = fun f acc str ->
@@ -24,9 +24,9 @@ module FtString = (
       in
       aux 0 acc
 
-  end)
+  end
 
-module FtList = (
+module FtList =
   struct
 
     let reduce : 'a list -> f:('a -> 'a -> 'a) -> 'a option = fun l ~f ->
@@ -35,4 +35,4 @@ module FtList = (
       | [] -> None
       | hd::tl -> Some (List.fold_left f hd tl)
 
-  end)
+  end

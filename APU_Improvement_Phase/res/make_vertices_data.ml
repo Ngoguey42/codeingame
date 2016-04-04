@@ -6,15 +6,15 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/03 13:28:06 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/04 07:08:51 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/04 09:25:12 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
-module Make_vertices_data : (
-  sig
-    val make : unit -> (Vert.t array * int * int
-                        * (int, int) Hashtbl.t * (int, int) Hashtbl.t)
-  end) = (
+module Make_vertices_data :
+sig
+  val make : unit -> (Vert.t array * int * int
+                      * (int, int) Hashtbl.t * (int, int) Hashtbl.t)
+end =
   struct
 
     type acc = {
@@ -64,4 +64,4 @@ module Make_vertices_data : (
 
       (vertArr, vCount, capSum, xVertTbl, yVertTbl)
 
-  end)
+  end

@@ -6,11 +6,11 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/03 13:25:20 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/04 09:06:43 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/04 09:27:00 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
-module Make_graph = (
+module Make_graph =
   struct
 
     let make () =
@@ -30,7 +30,6 @@ module Make_graph = (
       let eVarArr = Make_varying_parts.make_edges edgeArr in
       let vVarArr = Make_varying_parts.make_vertices vertArr edgeArr in
 
-
       for i = 0 to Array.length vVarArr - 1 do
         Printf.eprintf "%s\n%!" @@ ToString.V.var_id vVarArr i
       done;
@@ -45,4 +44,4 @@ module Make_graph = (
        ; Graph.rootsCount = vCount
        ; Graph.bridgesResidual = capSum / 2 })
 
-  end)
+  end

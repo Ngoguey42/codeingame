@@ -6,15 +6,15 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/03 13:28:44 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/04 07:11:52 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/04 09:25:41 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
-module Make_edges_data : (
-  sig
-    val make : Vert.t array -> (int, int) Hashtbl.t -> (int, int) Hashtbl.t
-               -> (Edge.t array * int)
-  end) = (
+module Make_edges_data :
+sig
+  val make : Vert.t array -> (int, int) Hashtbl.t -> (int, int) Hashtbl.t
+             -> (Edge.t array * int)
+end =
   struct
 
     type dimAcc = {
@@ -29,8 +29,6 @@ module Make_edges_data : (
         eCount' : int;
       }
 
-    let debugArr = ref [||] (* TODO: Remove *)
-
     let orientationAnalysis :
           (int, int) Hashtbl.t
           -> (int -> int) -> (int -> Edge.orientation)
@@ -42,8 +40,6 @@ module Make_edges_data : (
 
       let edgesOfVertices dimVal vLst eLst eCount =
 
-        (* Printf.eprintf "edgesOfVertices dimVal=%d vLst=(%s)\n%!" dimVal *)
-        (* @@ Vert.id_list_to_string !debugArr vLst; *)
         match vLst with
         | [] ->
            assert false
@@ -160,7 +156,6 @@ module Make_edges_data : (
       Array.iteri aux eArr
     let make vertArr xVertTbl yVertTbl =
 
-      debugArr := vertArr;
       let (eLst_tmp, eCount_tmp, xEdgeTbl) =
         orientationAnalysis
           xVertTbl
@@ -195,4 +190,4 @@ module Make_edges_data : (
       (eArr, eCount)
 
 
-  end)
+  end

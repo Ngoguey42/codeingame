@@ -1,11 +1,10 @@
 
-
 # sh maker.sh | pbcopy
 # and paste to codingame
 
 # or
 
-# sh maker.sh > tmp.ml && ocamlc tmp.ml && ./a.out
+# sh maker.sh > tmp.ml && ocamlc tmp.ml
 
 printf "" > tot.ml
 
