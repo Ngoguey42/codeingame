@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/03 12:22:46 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/04 07:38:16 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/04 09:00:59 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -51,16 +51,15 @@ module Graph = (
     type t = {
         verts : Vert.t array;
         edges : Edge.t array;
-        num_verts : int;
-        num_edges : int;
-        num_bridges : int; (* (Sum (Vert.capacity)) / 2 *)
+        vertsCount : int;
+        edgesCount : int;
+        bridgesCount : int; (* (Sum (Vert.capacity)) / 2 *)
       }
     type varying = {
-        verts : Vert.varying array; (* TODO: rename or move *)
-        edges : Edge.varying array;
-        num_roots : int; (* (Sum (Vert.group | Root -> 1 | _ -> 0))
-              start at num_verts *)
-        bridges_left : int; (* num_bridges - (Sum (Vert.defict))
-                / 2 Start at 0 *)
+        vertsVar : Vert.varying array; (* TODO: rename or move *)
+        edgesVar: Edge.varying array;
+        rootsCount : int; (* (Sum (Vert.group | Root -> 1 | _ -> 0))
+                             start at num_verts *)
+        bridgesResidual : int; (* num_bridges - (Sum (Vert.residual)) / 2 Start at 0 *)
       }
   end)

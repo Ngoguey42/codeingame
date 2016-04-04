@@ -6,10 +6,10 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/03 12:38:12 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/03 13:26:28 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/04 09:04:24 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
 let () =
-  ignore(Make_graph.make ());
+  let _, _ = Make_graph.make () in
   print_endline "0 0 2 0 1";
