@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/17 14:24:07 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/17 15:06:36 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/17 15:34:59 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -47,7 +47,7 @@ module Stream =
           let cgxline = input_line stdin in
           Printf.eprintf "LOADING \"%s\"\n%!" cgxline;
           stream.line <- cgxline;
-          stream.char_index <- 0;
+          stream.char_index <- -1;
           next stream
           (* stream.char_opt <- Some (String.get stream.line stream.char_index) *)
         )

@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/17 14:22:54 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/17 14:37:07 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/17 15:35:29 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -23,11 +23,13 @@ module Cfg = (* See "cfg" file for details *)
 
     and assoc_rhs stream indent_lvl =
       ignore(Stream.next stream); (* skipping '=' *)
+      print_char '=';
       Read_write_primitive.cur_spaces stream;
       match Stream.cur stream with
       | Some ' ' | Some '\t' | Some '\n' ->
          assert false (*unreachable*)
       | Some '(' ->
+         print_char '\n';
          block stream indent_lvl
       | Some '\'' ->
          Read_write_primitive.cur_string stream
@@ -40,6 +42,7 @@ module Cfg = (* See "cfg" file for details *)
 
 
     and string_or_assoc stream indent_lvl =
+      print_string @@ String.make (indent_lvl * 4) ' ';
       Read_write_primitive.cur_string stream;
       Read_write_primitive.cur_spaces stream;
       match Stream.cur stream with
@@ -56,10 +59,14 @@ module Cfg = (* See "cfg" file for details *)
 
     and block stream indent_lvl =
       ignore(Stream.next stream); (* skipping '(' *)
+      print_string @@ String.make (indent_lvl * 4) ' ';
+      print_endline "(";
       Read_write_primitive.cur_spaces stream;
       match Stream.cur stream with (* segregate empty / non-empty block case *)
       | Some ')' ->
          ignore(Stream.next stream); (* skipping ')' *)
+         print_string @@ String.make (indent_lvl * 4) ' ';
+         print_char ')';
          ()
       | None ->
          failwith "Reached EOS while expecting a closing paren for empty block"
@@ -70,9 +77,13 @@ module Cfg = (* See "cfg" file for details *)
            match Stream.cur stream with
            | Some ';' ->
               ignore(Stream.next stream); (* skipping ';' *)
+              print_endline ";";
               aux ()
            | Some ')' ->
               ignore(Stream.next stream); (* skipping ')' *)
+              print_char '\n';
+              print_string @@ String.make (indent_lvl * 4) ' ';
+              print_char ')';
               ()
            | None ->
               failwith "Reached EOS while expecting a closing paren for non-empty block"
@@ -92,8 +103,10 @@ module Cfg = (* See "cfg" file for details *)
       | Some '\'' ->
          string_or_assoc stream indent_lvl
       | Some '0'..'9' ->
+         print_string @@ String.make (indent_lvl * 4) ' ';
          number stream indent_lvl
-      | Some _ ->
+      | Some c ->
+         print_string @@ String.make (indent_lvl * 4) ' ';
          keyword stream indent_lvl
       | None ->
          failwith "Reached EOS while expecting an element"
