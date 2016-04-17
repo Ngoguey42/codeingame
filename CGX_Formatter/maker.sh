@@ -8,7 +8,10 @@
 
 printf "" > tot.ml
 
-# cat ft.ml >> tot.ml
+echo "(*" >> tot.ml
+cat cfg >> tot.ml
+echo "*)" >> tot.ml
+
 cat stream.ml >> tot.ml
 cat read_write_primitive.ml >> tot.ml
 cat cfg.ml >> tot.ml
