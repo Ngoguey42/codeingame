@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/03 13:28:44 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/04 09:25:41 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/13 07:29:54 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -110,9 +110,7 @@ end =
      *  (int) to avoid a lot of complicated operations.
      *    - xEdgeTbl unused, it was unforeseen
      *    - The combo Hashtbl/forloop could be improved a lot with a combo
-     *  Set/Range-iteration. Sadly range-iteration doen't exist in standard lib,
-     *  nor in Core.Set, nor in Batteries.Set  (nor in c++ std::set). It would
-     *  be easy to implement though. Might be doable with Core.Tree
+     *  Map/Range-iteration. Sadly range-iteration doen't exist in standard lib.
      *)
     let genPerpIds vArr eArr xEdgeTbl yEdgeTbl =
 
