@@ -42,7 +42,7 @@ module Cfg = (* See "cfg" file for details *)
 
 
     and string_or_assoc stream indent_lvl =
-      print_string @@ String.make (indent_lvl * 4) ' ';
+      print_tabs indent_lvl;
       Read_write_primitive.cur_string stream;
       Read_write_primitive.cur_spaces stream;
       match Stream.cur stream with
@@ -59,13 +59,13 @@ module Cfg = (* See "cfg" file for details *)
 
     and block stream indent_lvl =
       ignore(Stream.next stream); (* skipping '(' *)
-      print_string @@ String.make (indent_lvl * 4) ' ';
+      print_tabs indent_lvl;
       print_endline "(";
       Read_write_primitive.cur_spaces stream;
       match Stream.cur stream with (* segregate empty / non-empty block case *)
       | Some ')' ->
          ignore(Stream.next stream); (* skipping ')' *)
-         print_string @@ String.make (indent_lvl * 4) ' ';
+         print_tabs indent_lvl;
          print_char ')';
          ()
       | None ->
@@ -82,7 +82,7 @@ module Cfg = (* See "cfg" file for details *)
            | Some ')' ->
               ignore(Stream.next stream); (* skipping ')' *)
               print_char '\n';
-              print_string @@ String.make (indent_lvl * 4) ' ';
+              print_tabs indent_lvl;
               print_char ')';
               ()
            | None ->
@@ -103,10 +103,10 @@ module Cfg = (* See "cfg" file for details *)
       | Some '\'' ->
          string_or_assoc stream indent_lvl
       | Some '0'..'9' ->
-         print_string @@ String.make (indent_lvl * 4) ' ';
+         print_tabs indent_lvl;
          number stream indent_lvl
       | Some c ->
-         print_string @@ String.make (indent_lvl * 4) ' ';
+         print_tabs indent_lvl;
          keyword stream indent_lvl
       | None ->
          failwith "Reached EOS while expecting an element"

@@ -45,11 +45,9 @@ module Stream =
         ) else (
           (* Loading next line *)
           let cgxline = input_line stdin in
-          Printf.eprintf "LOADING \"%s\"\n%!" cgxline;
           stream.line <- cgxline;
           stream.char_index <- -1;
           next stream
-          (* stream.char_opt <- Some (String.get stream.line stream.char_index) *)
         )
       )
 
@@ -63,7 +61,6 @@ module Stream =
         _create 0 "" None
       else begin
           let cgxline = input_line stdin in
-          Printf.eprintf "INIT WITH \"%s\" num_line=%d\n%!" cgxline num_line;
           let char_opt = match cgxline with
             | "" -> Some '\n'
             | _ -> Some (String.get cgxline 0)
