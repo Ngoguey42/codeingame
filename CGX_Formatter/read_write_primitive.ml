@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/17 13:22:54 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/17 14:00:23 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/17 14:34:45 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -18,11 +18,12 @@ module Read_write_primitive =
      *)
 
     let cur_keyword stream = (* a trie would do great here!!! *)
-      assert (match Stream.cur stream with Some 'a'..'z' -> true | _ -> false);
+      assert (match Stream.cur stream with Some ('a'..'z') -> true | _ -> false);
       let cur_word =
         let rec aux char_wrap acc =
           match char_wrap with
-          | Some ('a'..'z' as c) -> aux (Stream.next stream) (acc ^ c)
+          | Some ('a'..'z' as c) ->
+             aux (Stream.next stream) (Printf.sprintf "%s%c" acc c)
           | _ -> acc
         in
         aux (Stream.cur stream) ""
@@ -50,13 +51,13 @@ module Read_write_primitive =
         | None -> failwith "Reached EOS before closing quote \"'\""
       in
       assert (Stream.cur stream = Some '\'');
-      print '\'';
+      print_char '\'';
       aux @@ Stream.next stream;
-      print '\'';
+      print_char '\'';
       ignore(Stream.next stream)
 
 
-    let cur_spaces stream =
+    let rec cur_spaces stream = (* Skip #0+ spaces *)
       match Stream.cur stream with
       | Some ' ' | Some '\t' | Some '\n' ->
          ignore(Stream.next stream);
