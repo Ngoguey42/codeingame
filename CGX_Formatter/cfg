@@ -1,0 +1,40 @@
+#******************************************************************************#
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    cfg                                                :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2016/04/17 13:14:19 by ngoguey           #+#    #+#              #
+#    Updated: 2016/04/17 13:42:51 by ngoguey          ###   ########.fr        #
+#                                                                              #
+#******************************************************************************#
+
+S ::= Element
+
+Epsilon ::=
+
+String_char ::= #All ascii but '\''
+String_content ::= Epsilon | String_char String_content
+String_delim ::= '\''
+String ::= String_delim String_content String_delim # REGEXP: \'[^\']*\'
+
+Keyword ::= null | false | true
+
+Number_char ::= '0'..'9'
+Number_loop ::= Epsilon | Number_char
+Number ::= Number_char Number_loop # REGEXP: [0-9]+
+
+Block_open ::= (
+Block_close ::= )
+Block_spacer ::= ;
+Block_elements ::= Element | Element Block_spacer Block_element
+Block_content ::= Epsilon | Block_elements
+Block ::= Block_open Block_content Block_close
+
+Assoc_spacer ::= =
+Assoc_rhs ::= String | Number | Keyword | Block
+
+String_or_assoc ::= String | String Assoc_spacer Assoc_rhs
+
+Element ::= String_or_assoc | Number | Keyword | Block
