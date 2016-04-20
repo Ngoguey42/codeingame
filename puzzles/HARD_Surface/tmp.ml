@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/20 11:18:35 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/20 12:06:47 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/20 12:14:11 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -17,9 +17,6 @@ module Vertex =
     type t = [ water
              | `Land ]
 
-
-
-
   end
 (* ************************************************************************** *)
 (*                                                                            *)
@@ -29,7 +26,7 @@ module Vertex =
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/20 11:07:16 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/20 12:14:03 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/20 12:37:23 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -65,12 +62,6 @@ module Map =
         | `Root (pos, count) -> pos, count
         | `Pointer (pos) -> root_info_of_pos pos
       in
-      (* let  *)
-      (* let rec incr_root pos = *)
-      (*   let (rx, ry), count = get_root pos in *)
-      (*   mat.(ry).(rx) <- V.Root (count + 1); *)
-      (*   (rx, ry) *)
-      (* in *)
 
       for y = 0 to h - 1 do
 
@@ -81,16 +72,21 @@ module Map =
                match (if x = 0 then `Land else mat.(y).(x - 1))
                    , (if y = 0 then `Land else mat.(y - 1).(x)) with
                | `Land, `Land ->
+                  Printf.eprintf "(%d, %d) is now root\n%!" x y;
                   `Root ((x, y), 1)
-               | (#V.water as n), `Land | `Land, (#V.water as n) ->
-                  let (rx, ry) as rpos, count = root_info_of_water_vertex n in
-                  mat.(ry).(rx) <- `Root (rpos, (count + 1));
-                  `Pointer rpos
-               | (#V.water as n), (#V.water as n') ->
+               | (#V.water as n), (#V.water as n') when n <> n' ->
                   let (rx, ry) as rpos, count = root_info_of_water_vertex n in
                   let (rx', ry'), count' = root_info_of_water_vertex n' in
+                  Printf.eprintf "(%d, %d) is now points to (%d, %d){\n%!" x y rx ry;
+                  Printf.eprintf "\t(%d, %d) updated to point to (%d, %d)}\n%!"
+                                 rx' ry' rx ry;
                   mat.(ry).(rx) <- `Root (rpos, count + count' + 1);
                   mat.(ry').(rx') <- `Pointer rpos;
+                  `Pointer rpos
+               | (#V.water as n), _ | _, (#V.water as n) ->
+                  let (rx, ry) as rpos, count = root_info_of_water_vertex n in
+                  Printf.eprintf "(%d, %d) is now points to (%d, %d)\n%!" x y rx ry;
+                  mat.(ry).(rx) <- `Root (rpos, (count + 1));
                   `Pointer rpos
              in
              mat.(y).(x) <- vert
@@ -100,7 +96,21 @@ module Map =
 
         String.iteri string_iterator @@ input_line stdin;
         ()
-      done;
+      done
+
+    let dump {mat} = (* debug *)
+      (* val iter : ('a -> unit) -> 'a array -> unit *)
+      Array.iter (fun line ->
+          Array.iter (fun vert ->
+              match vert with
+              | `Land -> Printf.eprintf " # %!"
+              | `Root (_, _) -> Printf.eprintf " R %!"
+              | `Pointer _ -> Printf.eprintf " O %!"
+            ) line;
+          Printf.eprintf "\n%!"
+        ) mat;
+      ()
+
 
   end
 ;; (* End of modules declaration *)
@@ -112,12 +122,15 @@ module Map =
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/20 11:06:02 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/20 11:18:11 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/20 12:33:23 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
 let () =
   Printf.eprintf "Hello world\n%!";
   let map = Map.empty_of_stdin () in
+  Printf.eprintf "TAMERE1\n%!";
   Map.fill map;
+  Printf.eprintf "TAMERE2\n%!";
+  Map.dump map;
   ()
