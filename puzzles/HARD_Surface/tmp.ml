@@ -26,7 +26,7 @@ module Vertex =
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/20 11:07:16 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/20 12:37:23 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/20 14:11:01 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -42,12 +42,24 @@ module Map =
       }
 
     let empty_of_stdin () =
-      let l = int_of_string (input_line stdin) in
+      let w = int_of_string (input_line stdin) in
       let h = int_of_string (input_line stdin) in
+      Printf.eprintf "Making matrix of w = %d, h = %d\n%!" w h;
       { h
-      ; w = l
-      ; mat = Array.make_matrix l h `Land}
+      ; w
+      ; mat = Array.make_matrix h w `Land}
 
+    let dump {mat} = (* debug *)
+      Array.iter (fun line ->
+          Array.iter (fun vert ->
+              match vert with
+              | `Land -> Printf.eprintf "  #  %!"
+              | `Root (_, co) -> Printf.eprintf " R%2d %!" co
+              | `Pointer (x, y) -> Printf.eprintf "(%d,%d)%!" x y
+            ) line;
+          Printf.eprintf "\n%!"
+        ) mat;
+      ()
 
     let fill {h; mat} =
 
@@ -72,44 +84,44 @@ module Map =
                match (if x = 0 then `Land else mat.(y).(x - 1))
                    , (if y = 0 then `Land else mat.(y - 1).(x)) with
                | `Land, `Land ->
-                  Printf.eprintf "(%d, %d) is now root\n%!" x y;
+                  (* Adjacent to 2 lands *)
                   `Root ((x, y), 1)
-               | (#V.water as n), (#V.water as n') when n <> n' ->
+               | (#V.water as n), (#V.water as n') -> begin
+                   match root_info_of_water_vertex n
+                       , root_info_of_water_vertex n' with
+                   | ((rx, ry) as rpos, count), ((rx', ry') as rpos', count')
+                        when rpos = rpos' ->
+                      (* Adjacent to 2 waters to SAME root *)
+                      mat.(ry).(rx) <- `Root (rpos, (count + 1));
+                      `Pointer rpos
+                   | ((rx, ry) as rpos, count), ((rx', ry'), count')
+                        when count > count' ->
+                      (* Adjacent to 2 waters w/ DIFFERENT roots, Keep left *)
+                      mat.(ry).(rx) <- `Root (rpos, count + count' + 1);
+                      mat.(ry').(rx') <- `Pointer rpos;
+                      `Pointer rpos
+                   | ((rx', ry'), count'), ((rx, ry) as rpos, count) ->
+                      (* Adjacent to 2 waters w/ DIFFERENT roots, Keep top *)
+                      mat.(ry).(rx) <- `Root (rpos, count + count' + 1);
+                      mat.(ry').(rx') <- `Pointer rpos;
+                      `Pointer rpos
+                 end
+               | (#V.water as n), `Land | `Land, (#V.water as n) ->
+                  (* Adjacent to 1 water *)
                   let (rx, ry) as rpos, count = root_info_of_water_vertex n in
-                  let (rx', ry'), count' = root_info_of_water_vertex n' in
-                  Printf.eprintf "(%d, %d) is now points to (%d, %d){\n%!" x y rx ry;
-                  Printf.eprintf "\t(%d, %d) updated to point to (%d, %d)}\n%!"
-                                 rx' ry' rx ry;
-                  mat.(ry).(rx) <- `Root (rpos, count + count' + 1);
-                  mat.(ry').(rx') <- `Pointer rpos;
-                  `Pointer rpos
-               | (#V.water as n), _ | _, (#V.water as n) ->
-                  let (rx, ry) as rpos, count = root_info_of_water_vertex n in
-                  Printf.eprintf "(%d, %d) is now points to (%d, %d)\n%!" x y rx ry;
                   mat.(ry).(rx) <- `Root (rpos, (count + 1));
                   `Pointer rpos
              in
              mat.(y).(x) <- vert
+             (* ;dump map (\*debug *\) *)
+
           | _ -> ()
 
         in
-
         String.iteri string_iterator @@ input_line stdin;
         ()
       done
 
-    let dump {mat} = (* debug *)
-      (* val iter : ('a -> unit) -> 'a array -> unit *)
-      Array.iter (fun line ->
-          Array.iter (fun vert ->
-              match vert with
-              | `Land -> Printf.eprintf " # %!"
-              | `Root (_, _) -> Printf.eprintf " R %!"
-              | `Pointer _ -> Printf.eprintf " O %!"
-            ) line;
-          Printf.eprintf "\n%!"
-        ) mat;
-      ()
 
 
   end
@@ -122,15 +134,13 @@ module Map =
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/20 11:06:02 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/20 12:33:23 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/20 13:48:34 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
 let () =
   Printf.eprintf "Hello world\n%!";
   let map = Map.empty_of_stdin () in
-  Printf.eprintf "TAMERE1\n%!";
   Map.fill map;
-  Printf.eprintf "TAMERE2\n%!";
   Map.dump map;
   ()
