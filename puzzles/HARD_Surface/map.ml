@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/20 11:07:16 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/20 14:11:01 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/20 14:19:32 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -41,18 +41,19 @@ module Map =
         ) mat;
       ()
 
-    let fill {h; mat} =
+    let rec root_info_of_pos ({mat} as map) ((x, y) as pos) =
+      match mat.(y).(x) with
+      | `Land -> (-1, -1), 0
+      | `Root (_, count) -> pos, count
+      | `Pointer pos' -> root_info_of_pos map pos'
 
-      let rec root_info_of_pos ((x, y) as pos) =
-        match mat.(y).(x) with
-        | `Land -> assert false
-        | `Root (_, count) -> pos, count
-        | `Pointer pos' -> root_info_of_pos pos'
-      in
+
+    let fill ({h; mat} as map) =
+
       let rec root_info_of_water_vertex (wvert : V.water) =
         match wvert with
         | `Root (pos, count) -> pos, count
-        | `Pointer (pos) -> root_info_of_pos pos
+        | `Pointer (pos) -> root_info_of_pos map pos
       in
 
       for y = 0 to h - 1 do
@@ -69,7 +70,7 @@ module Map =
                | (#V.water as n), (#V.water as n') -> begin
                    match root_info_of_water_vertex n
                        , root_info_of_water_vertex n' with
-                   | ((rx, ry) as rpos, count), ((rx', ry') as rpos', count')
+                   | ((rx, ry) as rpos, count), (rpos', count')
                         when rpos = rpos' ->
                       (* Adjacent to 2 waters to SAME root *)
                       mat.(ry).(rx) <- `Root (rpos, (count + 1));
@@ -93,7 +94,7 @@ module Map =
                   `Pointer rpos
              in
              mat.(y).(x) <- vert
-             (* ;dump map (\*debug *\) *)
+          (* ;dump map (\*debug *\) *)
 
           | _ -> ()
 
@@ -101,7 +102,5 @@ module Map =
         String.iteri string_iterator @@ input_line stdin;
         ()
       done
-
-
 
   end
