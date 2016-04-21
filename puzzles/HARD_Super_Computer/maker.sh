@@ -43,6 +43,7 @@ printf "" > tot.ml
 put_lib_file "biocaml" "interval_tree" "Interval"
 put_lib_file "filliatr" "binary_heap" "BinHeap"
 
+cat schedule.ml >> tot.ml
 cat calculation.ml >> tot.ml
 
 echo ";; (* End of modules declaration *)" >> tot.ml
