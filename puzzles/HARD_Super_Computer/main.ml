@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/21 16:06:45 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/21 16:08:02 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/21 16:20:20 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -16,6 +16,7 @@ let () =
   (* (\* the standard input according to the problem statement. *\) *)
 
   let n, events = Calc.events_of_stdin () in
+  let overlaps = Calc.overlaps_per_id_of_events n events in
 
   (* let n = int_of_string (input_line stdin) in *)
   (* let events = BinHeap.create n in *)
