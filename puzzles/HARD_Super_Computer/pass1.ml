@@ -6,15 +6,15 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/23 10:39:02 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/23 10:46:33 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/23 11:37:19 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
 module Task_infoArr_and_eventsPq =
   struct
     module T = Task
-    module E = T.Event
-    module EventPq = T.EventPq
+    module E = Task.Event
+    module EventPq = Task.EventPq
 
     let of_stdin () =
       let n = int_of_string (input_line stdin) in
@@ -23,7 +23,12 @@ module Task_infoArr_and_eventsPq =
         (fun i ->
           let line = input_line stdin in
           let start, len = Scanf.sscanf line "%d %d" (fun j d -> (j, d)) in
-
+          (* Printf.eprintf "a\n%!"; *)
+          (* Printf.eprintf "%s\n%!" (input_line stdin); *)
+          (* let start = read_int () in *)
+          (* Printf.eprintf "b\n%!"; *)
+          (* let len = read_int () in *)
+          (* Printf.eprintf "c\n%!"; *)
           EventPq.add eventsPq { E.day = start
                                ; E.id = i
                                ; E.info = E.Start };

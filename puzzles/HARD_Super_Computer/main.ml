@@ -6,37 +6,22 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/21 16:06:45 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/23 10:46:12 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/23 12:57:36 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
 let () =
-  Printf.eprintf "Hello world\n%!";
-  (* (\* Auto-generated code below aims at helping you parse *\) *)
-  (* (\* the standard input according to the problem statement. *\) *)
-
-  let n, infoArr, eventsPq = Task_infoArr_and_eventsPq.of_stdin () in
-  (* let overlaps = Calc.overlaps_per_id_of_events n events in *)
-  (* let carried_count = Schedule.carried_count_of_calc_overlaps n info overlaps in *)
-  (* Printf.printf "%d\n%!" carried_count; *)
-
-  (* let n = int_of_string (input_line stdin) in *)
-  (* let events = BinHeap.create n in *)
-
-
-  ()
-
-
-  (* Printf.eprintf "%d\n%!" n; *)
-  (* for i = 0 to n - 1 do *)
-
-  (*   let line = input_line stdin in *)
-  (*   let j, d = Scanf.sscanf line "%d %d" (fun j d -> (j, d)) in *)
-  (*   (); *)
-  (* done; *)
-
-
-  (* (\* Write an action using print_endline *\) *)
-  (* (\* To debug: prerr_endline "Debug message"; *\) *)
-
-  (* print_endline "answer"; *)
+  Printf.eprintf "%s\n%!" Sys.executable_name;
+  if Sys.executable_name <> "/tmp/native" then begin
+      (* Nasty hack to get native ocaml *)
+      ignore (Sys.command "ocamlopt /tmp/Answer.ml -o /tmp/native");
+      ignore (Sys.command "/tmp/native")
+    end
+  else
+    begin
+      Printf.eprintf "Phase1\n%!";
+      let ((n, infoArr, eventsPq) as pass1) = Task_infoArr_and_eventsPq.of_stdin () in
+      Printf.eprintf "Phase2\n%!";
+      let overlapsPq = Task_overlap_count_and_overlapsPq.of_pass1 pass1 in
+      Printf.eprintf "Phase3\n%!";
+    end

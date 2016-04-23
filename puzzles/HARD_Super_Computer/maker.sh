@@ -60,6 +60,7 @@ put_lib_file "filliatr" "binary_heap" "BinHeap"
 # cat calculation.ml
 cat task.ml
 cat pass1.ml
+cat pass2.ml
 
 echo ";; (* End of modules declaration *)"
 
