@@ -62,6 +62,7 @@ cat task.ml
 cat pass1.ml
 cat pass2.ml
 cat pass3.ml
+cat dumb_impl.ml
 
 echo ";; (* End of modules declaration *)"
 
