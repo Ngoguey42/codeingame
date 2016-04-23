@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/23 10:47:48 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/23 12:58:09 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/23 13:46:10 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -20,6 +20,8 @@ module Task_overlap_count_and_overlapsPq =
 
     let of_pass1 = fun (n, infoArr, eventsPq) ->
       let overlapsPq = OverlapPq.create n in
+      (* Hashtbl's original size should not be too high, as Hashtbl.iter
+       * is heavily impacted by it *)
       let opentaskHTbl = Hashtbl.create 100 in
 
       let rec aux () =

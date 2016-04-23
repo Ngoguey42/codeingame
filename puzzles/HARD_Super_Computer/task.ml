@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/23 10:10:36 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/23 10:56:02 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/23 13:52:31 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -14,7 +14,9 @@ module Task =
   struct
     type t = { left : int
              ; right : int
+             (* TODO: remove this field *)
              ; overlap_count : int
+
              }
 
     module Event =

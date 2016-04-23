@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/21 16:06:45 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/23 12:57:36 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/23 14:12:37 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -24,4 +24,7 @@ let () =
       Printf.eprintf "Phase2\n%!";
       let overlapsPq = Task_overlap_count_and_overlapsPq.of_pass1 pass1 in
       Printf.eprintf "Phase3\n%!";
+      let count = Task_nonoverlapping_count.of_pass2 pass1 overlapsPq in
+      Printf.printf "%d\n%!" count
+
     end
