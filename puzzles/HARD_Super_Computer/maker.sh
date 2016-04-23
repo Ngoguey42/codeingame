@@ -7,48 +7,58 @@
 
 # sh maker.sh > tmp.ml && ocamlc tmp.ml
 
+function put_ml_header() {
+
+	STR="$@"
+	COUNT_STAR=$(( 80 - 1 - 3 - 3 - ${#STR} ))
+	STARS="$(seq  -f '*' -s '' $COUNT_STAR)"
+
+	echo "(* ************************************************************************** *)"
+	printf "(* %s %s *)\n" "$STR" "$STARS"
+	echo "(* ************************************************************************** *)"
+	return
+}
+
 function put_lib_file() {
 
 	LIB_NAME=$1
 	FILE_PREFIX=$2
 	MODULE_NAME=$3
 
-	printf "(* Embedding %s's library %s.mli in code: *)\n"\
-		   $LIB_NAME $FILE_PREFIX\
-		   >> tot.ml
-	printf "module type %s_intf =\n" $MODULE_NAME >> tot.ml
-	echo "sig" >> tot.ml
-	cat $LIB_NAME/$FILE_PREFIX.mli | sed 's/^/  /' >> tot.ml
-	echo "end" >> tot.ml
-	printf "(* End of %s's %s.mli *)\n"\
-		   $LIB_NAME $FILE_PREFIX\
-		   >> tot.ml
+	put_ml_header $(
+		printf "Embedding %s's library %s.mli in code"\
+			   $LIB_NAME $FILE_PREFIX)
+	printf "module type %s_intf =\n" $MODULE_NAME
+	echo "sig"
+	cat $LIB_NAME/$FILE_PREFIX.mli | sed 's/^/  /'
+	echo "end"
+	put_ml_header $(
+		printf "End of %s's %s.mli"\
+			   $LIB_NAME $FILE_PREFIX)
 
-	printf "(* Embedding %s's library %s.ml in code: *)\n"\
-		   $LIB_NAME $FILE_PREFIX\
-		   >> tot.ml
-	printf "module %s : %s_intf =\n" $MODULE_NAME $MODULE_NAME >> tot.ml
-	echo "struct" >> tot.ml
-	cat $LIB_NAME/$FILE_PREFIX.ml | sed 's/^/  /' >> tot.ml
-	echo "end" >> tot.ml
-	printf "(* End of %s's %s.ml *)\n"\
-		   $LIB_NAME $FILE_PREFIX\
-		   >> tot.ml
+	echo ""
 
+	put_ml_header $(
+		printf "Embedding %s's library %s.ml in code"\
+			   $LIB_NAME $FILE_PREFIX)
+	printf "module %s : %s_intf =\n" $MODULE_NAME $MODULE_NAME
+	echo "struct"
+	cat $LIB_NAME/$FILE_PREFIX.ml | sed 's/^/  /'
+	echo "end"
+	put_ml_header $(
+		printf "End of %s's %s.ml"\
+			   $LIB_NAME $FILE_PREFIX)
+
+	echo ""
+	echo ""
 }
-
-
-printf "" > tot.ml
 
 put_lib_file "biocaml" "interval_tree" "Interval"
 put_lib_file "filliatr" "binary_heap" "BinHeap"
 
-cat schedule.ml >> tot.ml
-cat calculation.ml >> tot.ml
+cat schedule.ml
+cat calculation.ml
 
-echo ";; (* End of modules declaration *)" >> tot.ml
+echo ";; (* End of modules declaration *)"
 
-cat main.ml >> tot.ml
-
-cat tot.ml
-rm -rf tot.ml
+cat main.ml
