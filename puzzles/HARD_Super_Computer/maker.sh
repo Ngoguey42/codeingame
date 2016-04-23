@@ -56,8 +56,10 @@ function put_lib_file() {
 put_lib_file "biocaml" "interval_tree" "Interval"
 put_lib_file "filliatr" "binary_heap" "BinHeap"
 
-cat schedule.ml
-cat calculation.ml
+# cat schedule.ml
+# cat calculation.ml
+cat task.ml
+cat pass1.ml
 
 echo ";; (* End of modules declaration *)"
 
