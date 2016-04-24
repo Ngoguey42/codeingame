@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/23 14:23:46 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/24 07:05:55 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/24 08:26:40 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -40,42 +40,24 @@ module Dumb_implementation =
 
       let rec iter_tasks itv index best_count cur_count =
 
-        (* val fold_left : ('a -> 'b -> 'a) -> 'a -> 'b array -> 'a *)
-        (* Printf.eprintf "iter_tasks index(%d) best_count(%d) cur_count(%d)\n%!" *)
-        (*                index best_count cur_count; *)
         let rec task_folder i (best_count') {T.left; T.right} =
-
-          if index = 0 then
-            Printf.eprintf "%d of %d\n%!" i count_tasks;
-
-          (* Printf.eprintf "fold_tasks index(%d) best_count(%d) cur_count(%d) ->%!" *)
-          (*                i best_count' cur_count; *)
-          if intersects itv left right then (
-            (* Printf.eprintf "REJECT\n%!"; *)
-            (best_count')
-          )
+          if intersects itv left right then
+            best_count'
           else begin
-              (* Printf.eprintf "task_folder id(%d) FIT\n%!" i; *)
-              (* Printf.eprintf "ADD %d\n%!" i; *)
-              let new_count = check_recursion_level
-                                (add itv left right) (i + 1)
-                                best_count' (cur_count + 1)
+              let new_count =
+                check_recursion_level (add itv left right) (i + 1)
+                                      best_count' (cur_count + 1)
               in
-              (* Printf.eprintf "REM %d\n%!" i; *)
               if new_count > best_count' then
-                (new_count)
+                new_count
               else
-                (best_count')
+                best_count'
             end
 
         in
-        let (best_count') =
-          array_foldi_left_partial task_folder (best_count) infoArr index
-        in
-        best_count'
-        (* max best_count' best_count *)
+        array_foldi_left_partial task_folder (best_count) infoArr index
+
       and check_recursion_level itv index best_count cur_count =
-        (* Printf.eprintf "check_recursion_level...\n%!"; *)
         if index >= count_tasks then
           (* Reached end of recursion *)
           cur_count
