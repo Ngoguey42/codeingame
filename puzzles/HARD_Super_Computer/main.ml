@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/21 16:06:45 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/23 15:22:52 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/24 07:06:18 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -28,10 +28,10 @@ let () =
       Printf.printf "algo1: %d\n%!" count;
 
 
-      Printf.eprintf "Debug\n%!";
-      let count_debug = Dumb_implementation.nonoverlapping_count_of_infoArr
-                          infoArr in
-      Printf.printf "algo2: %d\n%!" count_debug;
-      if count_debug <> count
-      then exit 1
+      (* Printf.eprintf "Debug\n%!"; *)
+      (* let count_debug = Dumb_implementation.nonoverlapping_count_of_infoArr *)
+      (*                     infoArr in *)
+      (* Printf.printf "algo2: %d\n%!" count_debug; *)
+      (* if count_debug <> count *)
+      (* then exit 1 *)
     end

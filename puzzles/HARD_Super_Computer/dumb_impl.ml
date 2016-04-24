@@ -6,13 +6,14 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/23 14:23:46 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/23 15:21:47 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/24 07:05:55 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
 module Dumb_implementation =
   struct
     (* O(N^3) implementation for debugging purpose *)
+    (* Edit: Does not work *)
     module T = Task
 
     let add itv left right =
