@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/26 14:41:05 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/26 14:41:51 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/27 11:08:28 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -22,38 +22,58 @@ module Binary_Trie =
 
     let empty = Leaf
 
-    let add : dirs:dir list -> data:'a -> 'a t -> 'a t = fun ~dirs ~data trie ->
+    let change : dirs:dir list -> f:('a option -> 'a option) -> 'a t -> 'a t =
+      fun ~dirs ~f trie ->
 
       let rec aux dirs trie = (* Shadowing trie & dirs *)
         match dirs, trie with
         | `Left::tl, Node ({l} as n) -> Node {n with l = aux tl l}
         | `Right::tl, Node ({r} as n) -> Node {n with r = aux tl r}
-        | [], Node {dat = Some _} -> failwith "data already in trie"
-        | [], Node n -> Node {n with dat = Some data}
+        | [], Node ({dat} as n) -> Node {n with dat = f dat}
         | `Left::tl, Leaf -> Node {l = aux tl Leaf; dat = None; r = Leaf}
         | `Right::tl, Leaf -> Node {l = Leaf; dat = None; r = aux tl Leaf}
-        | [], Leaf -> Node {l = Leaf; dat = Some data; r = Leaf}
+        | [], Leaf -> Node {l = Leaf; dat = f None; r = Leaf}
       in
       aux dirs trie
+
+    let add : dirs:dir list -> data:'a -> 'a t -> 'a t =
+      fun ~dirs ~data trie ->
+
+      change ~dirs ~f:(function None -> Some data
+                              | Some _ -> failwith "data already in trie" ) trie
 
 
     let dump : f:('a -> string) -> 'a t -> unit = fun ~f trie ->
 
-      let rec aux depth trie = (* Shadowing trie *)
+      let rec aux prefix trie = (* Shadowing trie *)
         match trie with
         | Leaf ->
            ()
         | Node {l; dat; r} ->
            (match dat with
-           | None -> "None"
-           | Some data -> Printf.sprintf "Some \"%s\"" @@ f data)
-           |> Printf.eprintf "%-*d%s\n%!" (depth + 2) depth;
-           Printf.eprintf "%-*dL...\n%!" (depth + 2) depth;
-           aux (depth + 1) l;
-           Printf.eprintf "%-*dR...\n%!" (depth + 2) depth;
-           aux (depth + 1) r;
+            | None -> Printf.eprintf "%s None\n" prefix
+            | Some data -> Printf.eprintf "%s Some \"%s\"\n" prefix @@ f data
+           );
+
+                           (* |> Printf.eprintf "%-*d%s\n%!" (depth + 2) depth; *)
+           (* Printf.eprintf "%-*dL...\n%!" (depth + 2) depth; *)
+           aux (prefix ^ "l") l;
+           (* Printf.eprintf "%-*dR...\n%!" (depth + 2) depth; *)
+           aux (prefix ^ "r") r;
            ()
       in
-      aux 1 trie
+      aux ">" trie
+
+    class ['elt, 'acc] iterator =
+    object (self)
+
+      method fold : 'elt t -> dirs:(dir list) -> init:'acc -> 'acc =
+        fun trie ~dirs ~init ->
+        match trie, dirs with
+        | Leaf, _ | _, [] -> init
+        | Node {l}, `Left::tl -> self#fold l ~dirs:tl ~init
+        | Node {r}, `Right::tl -> self#fold r ~dirs:tl ~init
+
+    end
 
   end
