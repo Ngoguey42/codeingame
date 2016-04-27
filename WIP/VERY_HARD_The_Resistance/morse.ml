@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/27 12:07:51 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/27 12:12:45 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/27 13:34:31 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -53,6 +53,12 @@ module Morse =
       aux (String.length str - 1) []
     |> List.concat
 
+    let string_of_dirs dirs =
+
+      List.map (function `Left -> "l" | `Right -> "r") dirs
+      |> String.concat ""
+        (* val map : ('a -> 'b) -> 'a list -> 'b list *)
+        (* val map2 : ('a -> 'b -> 'c) -> 'a list -> 'b list -> 'c list *)
 
     let dirs_of_string str =
 

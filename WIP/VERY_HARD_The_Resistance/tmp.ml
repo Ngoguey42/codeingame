@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/26 14:41:05 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/27 12:13:40 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/27 13:18:00 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -54,11 +54,7 @@ module Binary_Trie =
             | None -> Printf.eprintf "%s None\n" prefix
             | Some data -> Printf.eprintf "%s Some \"%s\"\n" prefix @@ f data
            );
-
-                           (* |> Printf.eprintf "%-*d%s\n%!" (depth + 2) depth; *)
-           (* Printf.eprintf "%-*dL...\n%!" (depth + 2) depth; *)
            aux (prefix ^ "l") l;
-           (* Printf.eprintf "%-*dR...\n%!" (depth + 2) depth; *)
            aux (prefix ^ "r") r;
            ()
       in
@@ -69,7 +65,6 @@ module Binary_Trie =
 
       method fold : 'elt t -> dirs:(dir list) -> init:'acc -> 'acc =
         fun trie ~dirs ~init ->
-        (* Printf.eprintf "Trie fold\n%!"; *)
         match trie, dirs with
         | Leaf, _ | _, [] -> init
         | Node {l}, `Left::tl -> self#fold l ~dirs:tl ~init
@@ -159,7 +154,7 @@ module Morse =
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/27 10:53:28 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/27 12:29:59 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/27 13:17:32 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -170,7 +165,7 @@ module Morse_Trie =
     let empty = BT.empty
 
     let insert_string str trie =
-      Printf.eprintf "(%s)\n%!" str;
+      (* Printf.eprintf "(%s)\n%!" str; *)
       let dirs = Morse.dirs_of_word str in
       let f = function None -> Some 1
                      | Some count -> Some (count + 1)
@@ -183,22 +178,19 @@ module Morse_Trie =
 
       method fold : int BT.t -> dirs:(BT.dir list) -> init:int -> int =
         fun trie ~dirs ~init ->
-        (* Printf.eprintf "Morse fold\n%!"; *)
         match trie, dirs with
         | BT.Leaf, _ ->
-           0
+           init
         | BT.Node {BT.dat = None}, [] ->
-           0
+           init
         | BT.Node {BT.dat = Some fact}, [] ->
-           fact
+          init + fact
         | BT.Node {BT.dat = None}, _ ->
            super#fold trie ~dirs ~init
         | BT.Node {BT.dat = Some fact}, _ ->
            let fact' = self#fold ctor_trie ~dirs ~init:0 in
-
            super#fold trie ~dirs ~init:(init + fact' * fact)
 
-           (* super#fold trie ~dirs ~init *)
     end
 
 
@@ -212,7 +204,7 @@ module Morse_Trie =
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/26 14:24:47 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/27 12:18:11 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/27 13:18:47 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -229,22 +221,23 @@ let trie_of_stdin () =
 
 
 let () =
+  Printf.eprintf "%s\n%!" Sys.executable_name;
+  if Sys.executable_name <> "/tmp/native" then begin
+      (* Nasty hack to get native ocaml *)
+      ignore (Sys.command "ocamlopt /tmp/Answer.ml -o /tmp/native");
+      ignore (Sys.command "/tmp/native")
+    end
+  else
+    begin
+      Printf.eprintf "Hello World\n%!";
+      let msg = input_line stdin in
+      Printf.eprintf "MSG'%s'\n%!" msg;
+      let msg_dirs = Morse.dirs_of_string msg in
 
-
-  Printf.eprintf "Hello World\n%!";
-  let msg = input_line stdin in
-  let msg_dirs = Morse.dirs_of_string msg in
-
-  let trie = trie_of_stdin () in
-  (* Binary_Trie.dump trie ~f:(fun n -> *)
-  (*                    Printf.sprintf "%d" n *)
-  (*                  ); *)
-  let it = new Morse_Trie.iterator trie in
-  let count = it#fold ~dirs:msg_dirs ~init:0 trie in
-  Printf.printf "%d\n%!" count;
-
-  (* Printf.eprintf "Hello World\n%!"; *)
-  (* let tr = Binary_Trie.empty in *)
-  (* let tr = Binary_Trie.add ~dirs:[`Left; `Right; `Left] ~data:"lol" tr in *)
-  (* let tr = Binary_Trie.add ~dirs:[`Left; `Right; `Right] ~data:"hello" tr in *)
-  ()
+      let trie = trie_of_stdin () in
+      Binary_Trie.dump trie ~f:(fun n -> Printf.sprintf "%d" n);
+      let it = new Morse_Trie.iterator trie in
+      let count = it#fold ~dirs:msg_dirs ~init:0 trie in
+      Printf.printf "%d\n%!" count;
+      ()
+    end

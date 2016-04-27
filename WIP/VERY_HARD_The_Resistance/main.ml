@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/26 14:24:47 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/27 12:18:11 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/27 14:33:48 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -23,22 +23,27 @@ let trie_of_stdin () =
 
 
 let () =
+  Printf.eprintf "%s\n%!" Sys.executable_name;
+  if Sys.executable_name <> "/tmp/native" then begin
+      (* Nasty hack to get native ocaml *)
+      ignore (Sys.command "ocamlopt /tmp/Answer.ml -o /tmp/native");
+      ignore (Sys.command "/tmp/native")
+    end
+  else
+    begin
+      Printf.eprintf "Hello World\n%!";
+      let msg = input_line stdin in
+      let msg_dirs = Morse.dirs_of_string msg in
+      Printf.eprintf "MSG '%s' '%s'\n%!" msg @@ Morse.string_of_dirs msg_dirs;
 
-
-  Printf.eprintf "Hello World\n%!";
-  let msg = input_line stdin in
-  let msg_dirs = Morse.dirs_of_string msg in
-
-  let trie = trie_of_stdin () in
-  (* Binary_Trie.dump trie ~f:(fun n -> *)
-  (*                    Printf.sprintf "%d" n *)
-  (*                  ); *)
-  let it = new Morse_Trie.iterator trie in
-  let count = it#fold ~dirs:msg_dirs ~init:0 trie in
-  Printf.printf "%d\n%!" count;
-
-  (* Printf.eprintf "Hello World\n%!"; *)
-  (* let tr = Binary_Trie.empty in *)
-  (* let tr = Binary_Trie.add ~dirs:[`Left; `Right; `Left] ~data:"lol" tr in *)
-  (* let tr = Binary_Trie.add ~dirs:[`Left; `Right; `Right] ~data:"hello" tr in *)
-  ()
+      let trie = trie_of_stdin () in
+      Binary_Trie.dump trie ~f:(fun n -> Printf.sprintf "%d" n);
+      let it = new Morse_Trie.iterator trie in
+      Printf.eprintf "Go!\n%!";
+      let {Morse_Trie.fact} = it#fold ~dirs:msg_dirs ~init:{
+                                        Morse_Trie.fact = 0
+                                      ; Morse_Trie.trie_depth = 0
+                                      }trie in
+      Printf.printf "%d\n%!" fact;
+      ()
+    end

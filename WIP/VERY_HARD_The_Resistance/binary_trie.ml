@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/26 14:41:05 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/27 12:13:40 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/27 14:15:25 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -51,14 +51,11 @@ module Binary_Trie =
            ()
         | Node {l; dat; r} ->
            (match dat with
-            | None -> Printf.eprintf "%s None\n" prefix
+            | None -> ()
+               (* Printf.eprintf "%s None\n" prefix *)
             | Some data -> Printf.eprintf "%s Some \"%s\"\n" prefix @@ f data
            );
-
-                           (* |> Printf.eprintf "%-*d%s\n%!" (depth + 2) depth; *)
-           (* Printf.eprintf "%-*dL...\n%!" (depth + 2) depth; *)
            aux (prefix ^ "l") l;
-           (* Printf.eprintf "%-*dR...\n%!" (depth + 2) depth; *)
            aux (prefix ^ "r") r;
            ()
       in
@@ -69,7 +66,6 @@ module Binary_Trie =
 
       method fold : 'elt t -> dirs:(dir list) -> init:'acc -> 'acc =
         fun trie ~dirs ~init ->
-        (* Printf.eprintf "Trie fold\n%!"; *)
         match trie, dirs with
         | Leaf, _ | _, [] -> init
         | Node {l}, `Left::tl -> self#fold l ~dirs:tl ~init
