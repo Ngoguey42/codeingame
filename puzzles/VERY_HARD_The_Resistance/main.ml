@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/26 14:24:47 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/27 14:33:48 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/27 15:12:06 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -31,19 +31,17 @@ let () =
     end
   else
     begin
-      Printf.eprintf "Hello World\n%!";
       let msg = input_line stdin in
       let msg_dirs = Morse.dirs_of_string msg in
-      Printf.eprintf "MSG '%s' '%s'\n%!" msg @@ Morse.string_of_dirs msg_dirs;
-
       let trie = trie_of_stdin () in
-      Binary_Trie.dump trie ~f:(fun n -> Printf.sprintf "%d" n);
+      (* Binary_Trie.dump trie ~f:(fun n -> Printf.sprintf "%d" n); *)
       let it = new Morse_Trie.iterator trie in
-      Printf.eprintf "Go!\n%!";
-      let {Morse_Trie.fact} = it#fold ~dirs:msg_dirs ~init:{
-                                        Morse_Trie.fact = 0
-                                      ; Morse_Trie.trie_depth = 0
-                                      }trie in
+      let {Morse_Trie.fact} =
+        it#fold ~dirs:msg_dirs ~init:{ Morse_Trie.fact = 0
+                                     ; Morse_Trie.trie_depth = 0
+                                     ; Morse_Trie.msg_depth = 0
+                                     } trie
+      in
       Printf.printf "%d\n%!" fact;
       ()
     end

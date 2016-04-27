@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/26 14:41:05 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/27 14:15:25 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/27 15:13:16 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -20,7 +20,9 @@ module Binary_Trie =
                    ; r : 'a t }
      and 'a t = Leaf | Node of 'a node
 
+
     let empty = Leaf
+
 
     let change : dirs:dir list -> f:('a option -> 'a option) -> 'a t -> 'a t =
       fun ~dirs ~f trie ->
@@ -36,6 +38,7 @@ module Binary_Trie =
       in
       aux dirs trie
 
+
     let add : dirs:dir list -> data:'a -> 'a t -> 'a t =
       fun ~dirs ~data trie ->
 
@@ -43,7 +46,7 @@ module Binary_Trie =
                               | Some _ -> failwith "data already in trie" ) trie
 
 
-    let dump : f:('a -> string) -> 'a t -> unit = fun ~f trie ->
+    let dump : f:('a -> string) -> 'a t -> unit = fun ~f trie -> (* debug *)
 
       let rec aux prefix trie = (* Shadowing trie *)
         match trie with
@@ -52,7 +55,6 @@ module Binary_Trie =
         | Node {l; dat; r} ->
            (match dat with
             | None -> ()
-               (* Printf.eprintf "%s None\n" prefix *)
             | Some data -> Printf.eprintf "%s Some \"%s\"\n" prefix @@ f data
            );
            aux (prefix ^ "l") l;
@@ -61,11 +63,14 @@ module Binary_Trie =
       in
       aux ">" trie
 
+
+    (* Iterator wrapped in a class for Open Recursion *)
     class ['elt, 'acc] iterator =
     object (self)
 
       method fold : 'elt t -> dirs:(dir list) -> init:'acc -> 'acc =
         fun trie ~dirs ~init ->
+
         match trie, dirs with
         | Leaf, _ | _, [] -> init
         | Node {l}, `Left::tl -> self#fold l ~dirs:tl ~init
