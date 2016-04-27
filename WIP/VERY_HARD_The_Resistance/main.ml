@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/26 14:24:47 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/27 11:43:12 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/27 12:18:11 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -25,12 +25,17 @@ let trie_of_stdin () =
 let () =
 
 
-  let l = input_line stdin in
+  Printf.eprintf "Hello World\n%!";
+  let msg = input_line stdin in
+  let msg_dirs = Morse.dirs_of_string msg in
 
   let trie = trie_of_stdin () in
-  Binary_Trie.dump trie ~f:(fun n ->
-                     Printf.sprintf "%d" n
-                   );
+  (* Binary_Trie.dump trie ~f:(fun n -> *)
+  (*                    Printf.sprintf "%d" n *)
+  (*                  ); *)
+  let it = new Morse_Trie.iterator trie in
+  let count = it#fold ~dirs:msg_dirs ~init:0 trie in
+  Printf.printf "%d\n%!" count;
 
   (* Printf.eprintf "Hello World\n%!"; *)
   (* let tr = Binary_Trie.empty in *)

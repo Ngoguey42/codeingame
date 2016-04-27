@@ -63,6 +63,7 @@ function put_lib_file() {
 # cat pass2.ml
 # cat pass3.ml
 cat binary_trie.ml
+cat morse.ml
 cat morse_trie.ml
 
 # cat simple_solution.ml
