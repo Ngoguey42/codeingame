@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/04/27 10:53:28 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/04/27 15:14:25 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/04/28 11:57:49 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -41,10 +41,8 @@ module Morse_Trie =
 
 
       method fold : int BT.t -> dirs:(BT.dir list) -> init:acc -> acc =
-        fun trie ~dirs ~init ->
+        fun trie ~dirs ~init:({trie_depth; fact; msg_depth} as init) ->
 
-        (* How to unpack init on previous line??? *)
-        let {trie_depth; fact; msg_depth} = init in
         match trie, dirs with
         | BT.Leaf, _ ->
            (* End of iteration, no match *)
