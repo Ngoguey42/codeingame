@@ -60,8 +60,8 @@ module Morse_Trie =
                                                 ; msg_depth = msg_depth + 1}
         | BT.Node {BT.dat = Some fact'}, _ ->
            (* Step in iteration, match
-            * - Check in patterns was previously encountered
-            * OR Launch recursion and save pattern results
+            * - Check if patterns was previously encountered
+            *   OR Launch recursion and save pattern results
             * - Call SUPER to go on with iteration *)
            let fact'' =
              if Hashtbl.mem patterns (trie_depth, msg_depth) then
