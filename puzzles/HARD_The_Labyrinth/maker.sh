@@ -54,7 +54,7 @@ function put_lib_file() {
 }
 
 # put_lib_file "biocaml" "interval_tree" "Interval"
-# put_lib_file "filliatr" "binary_heap" "BinHeap"
+put_lib_file "filliatr" "binary_heap" "BinHeap"
 
 # cat schedule.ml
 # cat calculation.ml
@@ -64,7 +64,7 @@ function put_lib_file() {
 # cat pass3.ml
 cat bit_array.ml
 cat bit_matrix.ml
-
+cat astar.ml
 
 # cat simple_solution.ml
 

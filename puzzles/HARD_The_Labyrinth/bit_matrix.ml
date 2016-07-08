@@ -6,7 +6,7 @@
 (*   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2016/07/08 14:07:16 by ngoguey           #+#    #+#             *)
-(*   Updated: 2016/07/08 14:37:14 by ngoguey          ###   ########.fr       *)
+(*   Updated: 2016/07/08 14:41:48 by ngoguey          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -22,7 +22,7 @@ module Bit_matrix =
     let exists ~i ~j t =
       let m = Array.length t in
       let n = match m with
-        | 0 -> max_int
+        | 0 -> min_int
         | _ -> Array.get t 0 |> Bit_array.size
       in
       i < m && j < n
@@ -51,5 +51,4 @@ module Bit_matrix =
     let get ~i ~j t =
       assert (exists ~i ~j t);
       unsafe_get ~i ~j t
-
   end
