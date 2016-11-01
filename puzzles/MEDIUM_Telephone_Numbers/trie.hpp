@@ -6,7 +6,7 @@
 //   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2016/10/31 11:14:36 by ngoguey           #+#    #+#             //
-//   Updated: 2016/11/01 19:51:50 by ngoguey          ###   ########.fr       //
+//   Updated: 2016/11/01 20:08:15 by ngoguey          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -17,9 +17,6 @@
 #include <iterator>
 #include <iostream>
 #include <cassert>
-
-
-
 #include <string>
 #include <sstream>
 
@@ -342,6 +339,5 @@ T const &value, IndexIterator &it, IndexIterator const &end, _Node *&mem_cell) {
     _insert(value, ++it, end, *dst);
   }
 }
-
 
 #endif
