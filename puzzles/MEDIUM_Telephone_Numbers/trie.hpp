@@ -6,7 +6,7 @@
 //   By: ngoguey <ngoguey@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2016/10/31 11:14:36 by ngoguey           #+#    #+#             //
-//   Updated: 2016/11/01 13:14:45 by ngoguey          ###   ########.fr       //
+//   Updated: 2016/11/01 19:51:50 by ngoguey          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -16,6 +16,7 @@
 #include <array>
 #include <iterator>
 #include <iostream>
+#include <cassert>
 
 
 
@@ -52,7 +53,7 @@ private:
     _Node(_Node const &) = delete;
     _Node &operator =(_Node const &) = delete;
 
-    virtual bool is_branch() {
+    virtual bool is_branch() const {
       return false;
     }
 
@@ -94,11 +95,134 @@ private:
     _Branch(_Branch const &) = delete;
     _Branch &operator =(_Branch const &) = delete;
 
-    bool is_branch() override {
+    bool is_branch() const override {
       return true;
     }
 
   };
+
+  template <typename IndexIterator>
+  class ConstStringIterator {
+
+  private:
+    _Node const *_n;
+    IndexIterator _it;
+    IndexIterator const _end;
+
+  public:
+    ConstStringIterator() = delete;
+
+    ConstStringIterator(_Node const *n, IndexIterator const &it, IndexIterator const &end)
+      : _n(n)
+      , _it(it)
+      , _end(end) {
+    }
+
+    ~ConstStringIterator() {
+    }
+
+    ConstStringIterator(ConstStringIterator const &src)
+      : _n(src._n)
+      , _it(src._it)
+      , _end(src._end) {
+    }
+
+    ConstStringIterator &operator =(ConstStringIterator const &rhs) {
+      _n = rhs._n;
+      _it = rhs._it;
+      _end = rhs._end;
+    }
+
+    IndexIterator const &indices_forward() const {
+      return _it;
+    }
+
+    bool done() const {
+      return _n == nullptr;
+    }
+
+    bool has_value() const {
+      assert(_n != nullptr);
+      return _n->has_value();
+    }
+
+    T &operator*() const {
+      assert(_n != nullptr);
+      return _n->get_value();
+    }
+
+    ConstStringIterator &operator ++() {
+      if (_n == nullptr)
+        assert(false);
+      else if (_it == _end)
+        _n = nullptr;
+      else if (_n->is_branch()) {
+        _n = reinterpret_cast<_Branch const*>(_n)->sub_array[*_it];
+        ++_it;
+      }
+      else
+        _n = nullptr;
+      return *this;
+    }
+
+  };
+
+  // class ConstIterator {
+
+  // private:
+  //   _Node const *_n;
+  //   std::size_t _i;
+  //   std::stack<std::pair<_Branch const *, std::size_t>> _parents;
+
+  // public:
+  //   ConstIterator() = delete;
+
+  //   ConstIterator(_Node const *n)
+  //     : _n(n) {
+  //   }
+
+  //   ~ConstIterator() {
+  //   }
+
+  //   ConstIterator(ConstIterator const &src)
+  //     : _n(src._n)
+  //     , _i(src_i)
+  //     , _parents(src._parents) {
+  //   }
+
+  //   ConstIterator &operator =(ConstIterator const &rhs) {
+  //     _n = rhs._n;
+  //     _i = rhs._i;
+  //     _parents = rhs._parents;
+  //   }
+
+  //   bool done() const {
+  //     return _n == nullptr;
+  //   }
+
+  //   bool has_value() const {
+  //     assert(_n != nullptr);
+  //     return _n->has_value();
+  //   }
+
+  //   T &operator*() const {
+  //     assert(_n != nullptr);
+  //     return _n->get_value();
+  //   }
+
+  //   ConstIterator &operator ++() {
+  //     if (_n == nullptr)
+  //       assert(false);
+  //     if (_n->is_branch()) {
+  //       while (true) {
+  //         if (_i >= RADIX)
+  //       }
+  //     }
+
+  //     return *this;
+  //   }
+
+  // };
 
   _Node *_top;
 
@@ -106,10 +230,20 @@ public:
   Trie();
   ~Trie();
   Trie(Trie const &);
-  Trie & operator =(Trie const &);
+  Trie &operator =(Trie const &);
 
   template <typename IndexIterator>
   void insert(T const &value, IndexIterator it, IndexIterator const &end);
+
+  template <typename IndexIterator>
+  ConstStringIterator<IndexIterator> iterator(
+  IndexIterator const &it, IndexIterator const &end) const {
+    return ConstStringIterator<IndexIterator>{_top, it, end};
+  }
+
+  std::size_t size_nodes() const {
+    return _size_nodes(_top);
+  }
 
   void dump() const {
     if (_top == nullptr)
@@ -123,6 +257,21 @@ private:
   template <typename IndexIterator>
   void _insert(T const &value, IndexIterator &it, IndexIterator const &end,
                _Node *&mem_cell);
+
+  std::size_t _size_nodes(_Node const *n) const {
+    std::size_t acc;
+
+    if (n == nullptr)
+      return 0;
+    if (!n->is_branch())
+      return 1;
+    else {
+      acc = 0;
+      for (_Node const *o: reinterpret_cast<_Branch const *>(n)->sub_array)
+        acc += _size_nodes(o);
+      return acc + 1;
+    }
+  }
 
   void _dump(_Node &n, std::string acc) const {
     _Branch *b;
@@ -193,5 +342,6 @@ T const &value, IndexIterator &it, IndexIterator const &end, _Node *&mem_cell) {
     _insert(value, ++it, end, *dst);
   }
 }
+
 
 #endif
